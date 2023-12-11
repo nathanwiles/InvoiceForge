@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import "../styles/new-client-modal.scss";
-import requests from '../api/requests';
+import "../../styles/new-client-modal.scss";
+import requests from '../../api/requests';
 
 
 export default function NewClientModal(props) {
@@ -102,72 +102,72 @@ export default function NewClientModal(props) {
 
 
         {!clientId &&
-        <form onSubmit={handleClientSubmit}>
+          <form onSubmit={handleClientSubmit}>
             <h2>Add Client Info</h2>
 
-          {/* New Client Table*/}
+            {/* New Client Table*/}
 
-          <div className="form-group-new-client">
-            <label htmlFor="name">Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={clientData.name}
-              onChange={handleClientInputChange}
-              placeholder='required'
-              required
-            />
-          </div>
-          <div className="form-group-new-client">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={clientData.email}
-              onChange={handleClientInputChange}
-              placeholder='required'
-              required
-            />
-          </div>
-          <div className="form-group-new-client">
-            <label htmlFor="rate">Rate(¢):</label>
-            <input
-              type="number"
-              id="clientRateCents"
-              name="clientRateCents"
-              value={clientData.clientRateCents}
-              onChange={handleClientInputChange}
-              required
-            />
-          </div>
-          <div className="form-group-new-client">
-            <label htmlFor="phone">Phone:</label>
-            <input
-              type="phone"
-              id="phone"
-              name="phone"
-              value={clientData.phone}
-              onChange={handleClientInputChange}
-              placeholder='optional'
-            />
-          </div>
-          <div className="form-group-new-client">
-            <label htmlFor="companyName">Business:</label>
-            <input
-              type="text"
-              id="companyName"
-              name="companyName"
-              value={clientData.companyName}
-              onChange={handleClientInputChange}
-              placeholder='optional'
-            />
-          </div>
+            <div className="form-group-new-client">
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={clientData.name}
+                onChange={handleClientInputChange}
+                placeholder='required'
+                required
+              />
+            </div>
+            <div className="form-group-new-client">
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={clientData.email}
+                onChange={handleClientInputChange}
+                placeholder='required'
+                required
+              />
+            </div>
+            <div className="form-group-new-client">
+              <label htmlFor="rate">Rate(¢):</label>
+              <input
+                type="number"
+                id="clientRateCents"
+                name="clientRateCents"
+                value={clientData.clientRateCents}
+                onChange={handleClientInputChange}
+                required
+              />
+            </div>
+            <div className="form-group-new-client">
+              <label htmlFor="phone">Phone:</label>
+              <input
+                type="phone"
+                id="phone"
+                name="phone"
+                value={clientData.phone}
+                onChange={handleClientInputChange}
+                placeholder='optional'
+              />
+            </div>
+            <div className="form-group-new-client">
+              <label htmlFor="companyName">Business:</label>
+              <input
+                type="text"
+                id="companyName"
+                name="companyName"
+                value={clientData.companyName}
+                onChange={handleClientInputChange}
+                placeholder='optional'
+              />
+            </div>
 
 
-          <button type="submit" className='new-client-button'>Add Client Info</button>
-        </form>}
+            <button type="submit" className='new-client-button'>Add Client Info</button>
+          </form>}
 
         {/* Transition*/}
         {clientId && !showAddressForm &&
@@ -175,8 +175,8 @@ export default function NewClientModal(props) {
             <h3>✔️ Client Info Added</h3>
             <p>Would you like to add client address now?</p>
             <div className='info-address-transition'>
-            <button onClick={handleTransition} className='new-client-button'>Yes</button>
-            <button onClick={handleClientModelClose} className='new-client-button'>No</button>
+              <button onClick={handleTransition} className='new-client-button'>Yes</button>
+              <button onClick={handleClientModelClose} className='new-client-button'>No</button>
             </div>
           </div>}
 
@@ -236,13 +236,13 @@ export default function NewClientModal(props) {
 
           </form>}
 
-              {/* Close msg and button*/}
-              {addressId &&
-              <div>
-                <h3>✔️ Client Address Added</h3>
-                <button onClick={handleClientModelClose} className='new-client-button'>Close</button>
-              </div>
-            }
+        {/* Close msg and button*/}
+        {addressId &&
+          <div>
+            <h3>✔️ Client Address Added</h3>
+            <button onClick={handleClientModelClose} className='new-client-button'>Close</button>
+          </div>
+        }
 
       </div>
     </div>

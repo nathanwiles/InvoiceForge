@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "../styles/addEditModal.scss";
-import requests from "../api/requests";
+import "../../styles/addEditModal.scss";
+import requests from "../../api/requests";
 import { Modal, Button } from "react-bootstrap";
-import { useAlertModal } from "../contextProviders/useAlertModalContext";
+import { useAlertModal } from "../../contextProviders/useAlertModalContext";
 
 
 

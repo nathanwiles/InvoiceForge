@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
-import "../styles/top-navbar.scss";
+import "../../styles/top-navbar.scss";
 import LoginModal from "./LoginModal";
-import { useUserContext } from "../contextProviders/useUserContext";
+import { useUserContext } from "../../contextProviders/useUserContext";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 
 
@@ -42,19 +42,19 @@ export default function TopNavBar(props) {
           {!user && (<span onClick={handleLoginClick}>Log In</span>)}
           {!user && (<span>Sign Up</span>)}
         </div>
-          {/* dropdown for logout */}
-          {user && (
-            <Dropdown>
-              <Dropdown.Toggle as='span' className='user-greeting' id="dropdown-basic">
-                Hello {user.firstName}.
-              </Dropdown.Toggle>
+        {/* dropdown for logout */}
+        {user && (
+          <Dropdown>
+            <Dropdown.Toggle as='span' className='user-greeting' id="dropdown-basic">
+              Hello {user.firstName}.
+            </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleLogoutClick}>Log Out</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          )}
-          {/* {user && (<span className='user-greeting'>Hello, {user.firstName}.</span>)}
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={handleLogoutClick}>Log Out</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
+        {/* {user && (<span className='user-greeting'>Hello, {user.firstName}.</span>)}
           {user && (<span className='logout-btn' onClick={handleLogoutClick}>Log Out</span>)} */}
 
         {isLoginModalOpen && !user && <LoginModal onClose={handleModalClose} setUser={setUser} handleLinkClick={handleLinkClick} />}

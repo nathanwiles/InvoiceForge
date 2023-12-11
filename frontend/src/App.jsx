@@ -8,13 +8,13 @@ import { useUserContext } from "./contextProviders/useUserContext";
 import { useAlertModal } from "./contextProviders/useAlertModalContext";
 // import components
 import ReviewAppointmentsModal from "./components/ReviewAppointments/ReviewAppointments";
-import AppointmentContainer from "./components/AppointmentContainer";
+import AppointmentContainer from "./components/CreateInvoice/AppointmentContainer";
 import AlertModal from "./Modals/AlertModal";
-import ClientList from "./components/ClientList";
-import TopNavBar from "./components/TopNavBar";
-import LandingPage from "./components/Landingpage";
-import Footer from "./components/footer";
-import Page from "./components/Page";
+import ClientList from "./components/Clients/ClientList";
+import TopNavBar from "./components/Navigation/TopNavBar";
+import LandingPage from "./components/PublicPages/Landingpage";
+import Footer from "./components/Navigation/footer";
+import Page from "./components/Schedule/Page";
 
 function App() {
 

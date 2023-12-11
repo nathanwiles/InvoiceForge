@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import requests from '../api/requests';
-import "../styles/client-list.scss";
+import requests from '../../api/requests';
+import "../../styles/client-list.scss";
 import NewClientModal from "./NewClientModal";
 import EditClientModal from "./EditClientModal";
 import { FaTrash, FaEdit } from 'react-icons/fa';

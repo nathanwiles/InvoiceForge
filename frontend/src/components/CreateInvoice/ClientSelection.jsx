@@ -1,4 +1,4 @@
-import "../styles/clientSelection.scss";
+import "../../styles/clientSelection.scss";
 import { useEffect, useRef } from "react";
 
 const ClientSelection = ({ selectedClient, handleClientSelect, clients }) => {
@@ -34,7 +34,7 @@ const ClientSelection = ({ selectedClient, handleClientSelect, clients }) => {
           <p>Ready to generate an invoice?</p>
           <p>Choose a client to get started by clicking the "Select a client" drop-down menu above!</p>
           </div>
-       
+
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/uninvoicedAppointments.scss";
+import "../../styles/uninvoicedAppointments.scss";
 
 const UninvoicedAppointmentItem = ({
   appointment,
@@ -40,4 +40,3 @@ const UninvoicedAppointments = ({
 };
 
 export default UninvoicedAppointments;
-

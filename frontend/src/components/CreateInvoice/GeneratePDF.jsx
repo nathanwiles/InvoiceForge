@@ -1,8 +1,8 @@
 import React from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import "../styles/InvoiceGeneratedModal.scss";
-import { useInvoiceModal } from "../contextProviders/useInvoiceModalContext";
+import "../../styles/InvoiceGeneratedModal.scss";
+import { useInvoiceModal } from "../../contextProviders/useInvoiceModalContext";
 
 const GeneratePDF = ({
   reviewedAppointments,

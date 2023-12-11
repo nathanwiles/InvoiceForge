@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import GeneratePDF from "./GeneratePDF";
-import InvoiceModal from "../Modals/InvoiceModal";
-import { useAlertModal } from "../contextProviders/useAlertModalContext";
+import InvoiceModal from "../../Modals/InvoiceModal";
+import { useAlertModal } from "../../contextProviders/useAlertModalContext";
 
 const InvoiceGenerator = ({
   reviewedAppointments,

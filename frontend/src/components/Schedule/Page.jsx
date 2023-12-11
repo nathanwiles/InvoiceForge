@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from "react";
-import "../styles/page.scss";
+import "../../styles/page.scss";
 import AddEditModal from "./AddEditModal";
 import Day from "./Day";
 

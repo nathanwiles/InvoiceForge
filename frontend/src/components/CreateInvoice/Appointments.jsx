@@ -1,11 +1,11 @@
 import React from 'react';
-import '../styles/appointments.scss';
+import '../../styles/appointments.scss';
 
 const Appointments = (props) => {
 
   const { appointments } = props;
   console.log('appointments', appointments);
-  
+
 
   return (
     <div >

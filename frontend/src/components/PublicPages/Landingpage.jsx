@@ -1,4 +1,4 @@
-import "../styles/landing-page.scss";
+import "../../styles/landing-page.scss";
 
 export default function LandingPage(props) {
   return (

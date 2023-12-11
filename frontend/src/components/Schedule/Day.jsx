@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../styles/day.scss";
-import requests from "../api/requests";
+import "../../styles/day.scss";
+import requests from "../../api/requests";
 import { Calendar, momentLocalizer, DateLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -8,7 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
 
 const Day = (props) => {
-	const { setShow, show } = props
+	const { setShow, show } = props;
 	const setSelectedEvent = props.setSelectedEvent;
 
 	const [events, setevents] = useState([]);

@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import ClientSelection from "./ClientSelection";
 import UninvoicedAppointments from "./UninvoicedAppointments";
 import InvoiceGenerator from "./InvoiceGenerator";
-import requests from "../api/requests";
-import { UseReviewAppointmentsContext } from "./ReviewAppointments/Context/UseReviewAppointmentsContext";
-import { InvoiceModalProvider } from "../contextProviders/useInvoiceModalContext";
+import requests from "../../api/requests";
+import { UseReviewAppointmentsContext } from "../ReviewAppointments/Context/UseReviewAppointmentsContext";
+import { InvoiceModalProvider } from "../../contextProviders/useInvoiceModalContext";
 
 
 const AppointmentsContainer = ({ user }) => {

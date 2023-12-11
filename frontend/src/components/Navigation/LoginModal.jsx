@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import requests from '../api/requests';
-import '../styles/login-modal.scss';
+import requests from '../../api/requests';
+import '../../styles/login-modal.scss';
 
 
 const LoginModal = (props) => {
@@ -26,7 +26,7 @@ const LoginModal = (props) => {
         setLoginError(true);
       }
     } catch (error) {
-    console.log(error);
+      console.log(error);
     }
   };
 

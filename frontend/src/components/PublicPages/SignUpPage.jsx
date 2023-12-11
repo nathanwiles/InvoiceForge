@@ -1,4 +1,4 @@
-import "../styles/signup-page.scss"
+import "../../styles/signup-page.scss"
 
 export default function SignUpForm(props) {
 
