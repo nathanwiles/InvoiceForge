@@ -17,7 +17,12 @@ export default (url, Dto) => {
   };
 
   return fetch(url, requestOptions)
-    .then((response) => response.json())
+    .then((res) => {
+      if (res.status === 422) {
+        throw new Error("Error updating appointment");
+      }
+      res.json()
+    })
     .catch((error) => {
       // Handle any errors
         console.log(error);
