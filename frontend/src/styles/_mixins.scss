@@ -1,3 +1,4 @@
+$goldenrodHover: rgba(184, 135, 11, 0.783);
 $goldenrod: darkgoldenrod;
 @mixin main-colours {
   background-color: lightgray;
@@ -89,14 +90,14 @@ $goldenrod: darkgoldenrod;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: $goldenrod;
+    background-color: $goldenrodHover;
     color: lightgray;
   }
 
   &:active {
     border: inset;
     border-width: thin;
-    border-color: $goldenrod;
+    border-color: $goldenrodHover;
     transform: translate(1px, 1px);
   }
 }
