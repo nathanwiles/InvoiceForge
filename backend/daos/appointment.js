@@ -32,12 +32,7 @@ class appointmentDao {
   }
 
   async edit({id, date, startTime, endTime, appointmentRateCents, notes, confirmedHours}) {
-    // if (confirmedHours) {
-    //   return await db('appointments').where({ id }).update({
-    //     confirmed_hours: confirmedHours,
-    //     reviewed: true
-    //   });
-    // }
+
     return await db('appointments').where({ id }).update({
       date,
       start_time: startTime,
