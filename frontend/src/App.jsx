@@ -14,7 +14,7 @@ import ClientList from "./components/Clients/ClientList";
 import TopNavBar from "./components/Navigation/TopNavBar";
 import LandingPage from "./components/PublicPages/Landingpage";
 import Footer from "./components/Navigation/footer";
-import Page from "./components/Schedule/Page";
+import Schedule from "./components/Schedule/Schedule";
 
 function App() {
 
@@ -68,7 +68,7 @@ function App() {
   // 3: "Tobi"
   // 4: "Caroline"
   useEffect(() => {
-    const id = 4;
+    const id = 1;
     fetch(`/api/user/${id}/object`)
       .then((res) => res.json())
       .then((data) => {
@@ -87,7 +87,7 @@ function App() {
       <section className="page-content">
         {displayPage === 0 && <LandingPage />}
 
-        {displayPage === 1 && <Page user={user} />}
+        {displayPage === 1 && <Schedule user={user} />}
         {displayPage === 2 && <ClientList user={user} />}
         {displayPage === 4 && (
           <AppointmentContainer user={user} />
