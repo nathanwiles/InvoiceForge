@@ -27,41 +27,29 @@ const Day = (props) => {
 				console.error(err);
 			});
 	};
-
-	const handleEventDrop = ({ event, start, end }) => {
+	const updateEvent = (event, start, end) => {
 		const idx = events.indexOf(event);
 		let updatedEvent = { ...event, start, end };
-		console.log("event", updatedEvent);
 		const date = moment(start).format('YYYY-MM-DD');
 		const startTime = moment(start).format('HH:mm:SS');
 		const endTime = moment(end).format('HH:mm:SS');
-		handleAppointmentUpdate({ date, startTime, endTime }, updatedEvent.appointment)
+		return handleAppointmentUpdate({ date, startTime, endTime }, updatedEvent.appointment)
 			.then((appointment) => {
 				updatedEvent = { ...updatedEvent, appointment };
 				const updatedEvents = [...events];
 				updatedEvents.splice(idx, 1, updatedEvent);
 				setevents(updatedEvents);
 			});
+	};
 
-		const nextEvents = [...events];
-		nextEvents.splice(idx, 1, updatedEvent);
-		setevents(nextEvents);
+	const handleEventDrop = ({ event, start, end }) => {
+		updateEvent(event, start, end);
 	};
 
 	const handleEventResize = ({ event, start, end }) => {
-		const idx = events.indexOf(event);
-		let updatedEvent = { ...event, start, end };
-		const date = moment(start).format('YYYY-MM-DD');
-		const startTime = moment(start).format('HH:mm:SS');
-		const endTime = moment(end).format('HH:mm:SS');
-		handleAppointmentUpdate({ date, startTime, endTime }, updatedEvent.appointment)
-			.then((appointment) => {
-				updatedEvent = { ...updatedEvent, appointment };
-				const updatedEvents = [...events];
-				updatedEvents.splice(idx, 1, updatedEvent);
-				setevents(updatedEvents);
-			});
+		updateEvent(event, start, end);
 	};
+
 
 	const handleSelectSlot = (slotInfo) => {
 		let { date, start: startTime, end: endTime } = slotInfo;
