@@ -1,19 +1,21 @@
+@import "./mixins.scss";
+
 .client-option {
-  width: 50vw;
+  width: min-content;
+  margin: 1vh;
   padding: 8px;
   font-size: 14px;
   font-family: "Georgia, 'Times New Roman', Times, serif";
   font-size: large;
-  background-color: darkgray;
+  @include button-colours;
   border-radius: 4px;
 }
 
 
 .select-client-msg {
-  max-height: 65vh;
-  width: 29vw;
-  position: fixed;
-  top: 30%;
+  width: 50vw;
+  position: absolute;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
