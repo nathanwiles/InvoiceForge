@@ -19,27 +19,32 @@
 
 /* styles for each appointment item */
 .uninvoiced-appointment-list-item {
-  border-radius: 8px 8px 8px 8px;
+  border-radius: 8px;
   user-select: none;
   width: 300px;
   height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 24px;
   cursor: pointer;
   background-color: white;
   font-size: large;
   font-family: "Georgia, 'Times New Roman', Times, serif";
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25); // Add box shadow here
 }
 
 .uninvoiced-appointment-list-item:hover {
-  background-color: rgb(211, 211, 211);
+  background-color: rgba(184, 135, 11, 0.783);
+  color: #fff;
 }
 
 /* styles for the selected item */
 .uninvoiced-appointment-list-item.selected {
-  background-color: darkgray;
+  &:hover {
+    background-color: rgba(184, 135, 11, 0.783);
+    color: #fff;
+  }
+  background-color: darkgoldenrod;
   color: #fff;
 }
 
