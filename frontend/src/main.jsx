@@ -14,14 +14,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ReviewAppointmentsProvider } from "./components/ReviewAppointments/Context/UseReviewAppointmentsContext";
 import { UserContextProvider } from "./contextProviders/useUserContext";
 import { AlertModalProvider } from './contextProviders/useAlertModalContext.jsx';
+import { CalendarProvider } from './contextProviders/calendarContext.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-     <UserContextProvider> {/*this is the context provider for the user */}
-      <AlertModalProvider>  {/*this is the context provider for the alert modal*/}
-        <ReviewAppointmentsProvider> {/*this is the context provider for the review appointments Modal*/}
-          <App />
+     <UserContextProvider>
+      <AlertModalProvider>
+        <ReviewAppointmentsProvider>
+          <CalendarProvider>
+            <App />
+          </CalendarProvider>
         </ReviewAppointmentsProvider>
       </AlertModalProvider>
     </UserContextProvider>
