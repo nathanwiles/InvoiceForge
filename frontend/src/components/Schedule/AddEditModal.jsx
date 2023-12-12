@@ -3,43 +3,66 @@ import "../../styles/addEditModal.scss";
 import requests from "../../api/requests";
 import { Modal, Button } from "react-bootstrap";
 import { useAlertModal } from "../../contextProviders/useAlertModalContext";
+import appointment from "../../api/requests/create/appointment";
 
 
 
+/**
+ * AddEditModal component for creating or editing appointments.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.show - Flag indicating whether the modal is visible.
+ * @param {Function} props.onClose - Function to close the modal.
+ * @param {Object} props.selectedSlot - The selected time slot for creating a new appointment.
+ * @param {Object} props.selectedEvent - The selected event for editing an existing appointment.
+ * @param {Object} props.user - The user object.
+ * @returns {JSX.Element} The AddEditModal component.
+ */
 function AddEditModal(props) {
-	const { showAlert } = useAlertModal();
-	const { show, onClose } = props;
 	const defaultFormData = {
-		appointmentRateCents: 0,
-		date: "",
-		endTime: "",
-		notes: "",
-		startTime: "",
 		clientId: "",
 		clientName: "",
+		date: "",
+		startTime: "",
+		endTime: "",
+		appointmentRate: 0,
+		notes: "",
 	};
-	const { selectedEvent, user } = props;
 	const [formData, setFormData] = useState(defaultFormData);
+	const { showAlert } = useAlertModal();
+	const { show, onClose, selectedSlot, selectedEvent, user } = props;
 
 	useEffect(() => {
 		if (selectedEvent) {
 			const eventData = selectedEvent.appointment;
-			const { appointmentRateCents, date, endTime, notes, startTime } = eventData;
-			const { id: clientId, name: clientName } = eventData.client;
-			const newFormData = {
-				appointmentRateCents,
-				date,
-				endTime,
-				notes,
-				startTime,
+			const { client, ...eventdata } = eventData;
+			const { id: clientId, name: clientName } = client;
+			const editFormData = {
+				...defaultFormData,
+				...eventData,
+				appointmentRate: eventData.appointmentRateCents / 100 || 0,
 				clientId,
 				clientName
+			};
+			setFormData(editFormData);
+		} else if (selectedSlot) {
+			let { date, startTime, endTime } = selectedSlot;
+			if (startTime === endTime) {
+				startTime = "";
+				endTime = "";
+			}
+			const newFormData = {
+				...defaultFormData,
+				date: date || '',
+				startTime: startTime || '',
+				endTime: endTime || '',
 			};
 			setFormData(newFormData);
 		} else {
 			setFormData(defaultFormData);
 		}
-	}, [selectedEvent, show]);
+	}, [show]);
 
 	const [clients, setClients] = useState([]);
 
@@ -89,26 +112,21 @@ function AddEditModal(props) {
 
 	const handleEdit = async (event) => {
 		event.preventDefault();
-		const edittedappointment = {
-			appointmentId: selectedEvent.appointment.id,
-			date: formData.date,
-			startTime: formData.startTime,
-			endTime: formData.endTime,
-			clientId: selectedEvent.appointment.client.id,
-			userId: user.id,
-			appointmentRateCents: formData.appointmentRateCents,
-			notes: formData.notes,
+		const { id: appointmentId, client } = selectedEvent.appointment;
+		const { id: clientId } = client;
+		const editedAppointment = {
+			...formData,
+			clientId
 		};
 		try {
-			const url = `/api/appointment/${edittedappointment.appointmentId}`;
+			const url = `/api/appointment/${appointmentId}`;
 			const reqOptions = {
 				method: "PUT",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify(edittedappointment),
+				body: JSON.stringify(editedAppointment),
 			};
 			fetch(url, reqOptions);
 			showAlert({ title: "Success", message: "Updated successfully" });
-
 		} catch (error) {
 			console.error("Error sending data", error);
 		}
@@ -193,12 +211,12 @@ function AddEditModal(props) {
 								value={formData.endTime}
 								onChange={handleChange}
 							/>
-							<label>Appointment Rate (cents) :</label>
+							<label>Appointment Rate ($):</label>
 							<input
 								type="number"
-								step={100}
-								name="appointmentRateCents"
-								value={formData.appointmentRateCents}
+								step={5}
+								name="appointmentRate"
+								value={formData.appointmentRate}
 								onChange={handleChange}
 							/>
 							<label>Notes:</label>
