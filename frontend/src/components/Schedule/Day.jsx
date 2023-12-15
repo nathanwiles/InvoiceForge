@@ -1,20 +1,24 @@
-import React, { useEffect, useState } from "react";
-import "../../styles/day.scss";
-import requests from "../../api/requests";
+import React, { useEffect } from "react";
+import moment from "moment";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import moment from "moment";
+import { useAlertModal } from "../../contextProviders/useAlertModalContext";
+import { useCalendar } from '../../contextProviders/calendarContext';
+import requests from "../../api/requests";
+import "../../styles/day.scss";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { useAlertModal } from "../../contextProviders/useAlertModalContext";
 
 const localizer = momentLocalizer(moment);
+const DnDCalendar = withDragAndDrop(Calendar);
 
-const Day = (props) => {
-	const { setShow, show, setSelectedSlot } = props;
-	const setSelectedEvent = props.setSelectedEvent;
-	const { showAlert } = useAlertModal();
-	const DnDCalendar = withDragAndDrop(Calendar);
+const Day = ({user}) => {
+  const { showAlert } = useAlertModal();
+  const {
+    events,
+    setEvents,
+		showAddEditModal,
+  } = useCalendar();
 
 	const handleAppointmentUpdate = (newData, appointment) => {
 		const updatedAppointment = { ...appointment, ...newData };
@@ -27,7 +31,8 @@ const Day = (props) => {
 				console.error(err);
 			});
 	};
-	const updateEvent = (event, start, end) => {
+
+	const adjustEvent = ({event, start, end}) => {
 		const idx = events.indexOf(event);
 		let updatedEvent = { ...event, start, end };
 		const date = moment(start).format('YYYY-MM-DD');
@@ -38,59 +43,23 @@ const Day = (props) => {
 				updatedEvent = { ...updatedEvent, appointment };
 				const updatedEvents = [...events];
 				updatedEvents.splice(idx, 1, updatedEvent);
-				setevents(updatedEvents);
+				setEvents(updatedEvents);
 			});
-	};
-
-	const handleEventDrop = ({ event, start, end }) => {
-		updateEvent(event, start, end);
-	};
-
-	const handleEventResize = ({ event, start, end }) => {
-		updateEvent(event, start, end);
 	};
 
 
 	const handleSelectSlot = (slotInfo) => {
-		let { date, start: startTime, end: endTime } = slotInfo;
+		let { date, start, end } = slotInfo;
 		date = moment(date).format('YYYY-MM-DD');
-		startTime = moment(startTime).format('HH:mm:SS');
-		endTime = moment(endTime).format('HH:mm:SS');
-		setSelectedSlot({ startTime, endTime, date });
-		setShow(true);
+		const startTime = moment(start).format('HH:mm:SS');
+		const endTime = moment(end).format('HH:mm:SS');
+		const slot ={ startTime, endTime, date };
+		showAddEditModal({slot});
 	};
 
-	const [events, setevents] = useState([]);
-
-	useEffect(() => {
-		if (!show) setSelectedEvent(null);
-		const fetchData = async () => {
-			try {
-				const appointments = await requests.get.user(props.user.id)
-					.appointments;
-				const sortedEvents = appointments.map((app) => {
-					return {
-						start: moment(`${app.date}T${app.startTime}`).toDate(),
-						end: moment(`${app.date}T${app.endTime}`).toDate(),
-						title: app.client.name,
-						id: app.id,
-						appointment: { ...app }
-					};
-				});
-
-				setevents(sortedEvents);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		};
-
-		fetchData();
-	}, [show]);
-
-	//function to handle edit
+	// opens the modal with the selected event
 	const handleSelectedEvent = (event) => {
-		setSelectedEvent(event);
-		setShow(true);
+		showAddEditModal({event});
 	};
 
 
@@ -115,8 +84,8 @@ const Day = (props) => {
 				selectable={true}
 				onSelectSlot={handleSelectSlot}
 				showMultiDayTimes={true}
-				onEventDrop={handleEventDrop}
-				onEventResize={handleEventResize}
+				onEventDrop={adjustEvent}
+				onEventResize={adjustEvent}
 				resizable={true}
 				draggable={true}
 				style={{ height: "80vh" }}

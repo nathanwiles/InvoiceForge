@@ -3,23 +3,22 @@ import "../../styles/addEditModal.scss";
 import requests from "../../api/requests";
 import { Modal, Button } from "react-bootstrap";
 import { useAlertModal } from "../../contextProviders/useAlertModalContext";
-import appointment from "../../api/requests/create/appointment";
+import { useCalendar } from "../../contextProviders/calendarContext";
+import { useClients } from "../../contextProviders/clientsContext";
+import appointmentToEvent from "./helpers/appointmentToEvent";
 
 
+function AddEditModal() {
+	const {
+		selectedEvent,
+		show,
+		hide,
+		selectedSlot,
+		events,
+		setEvents,
+	} = useCalendar();
 
-/**
- * AddEditModal component for creating or editing appointments.
- *
- * @component
- * @param {Object} props - The component props.
- * @param {boolean} props.show - Flag indicating whether the modal is visible.
- * @param {Function} props.onClose - Function to close the modal.
- * @param {Object} props.selectedSlot - The selected time slot for creating a new appointment.
- * @param {Object} props.selectedEvent - The selected event for editing an existing appointment.
- * @param {Object} props.user - The user object.
- * @returns {JSX.Element} The AddEditModal component.
- */
-function AddEditModal(props) {
+
 	const defaultFormData = {
 		clientId: "",
 		clientName: "",
@@ -31,40 +30,50 @@ function AddEditModal(props) {
 	};
 	const [formData, setFormData] = useState(defaultFormData);
 	const { showAlert } = useAlertModal();
-	const { show, onClose, selectedSlot, selectedEvent, user } = props;
+	const { clients } = useClients();
 
 	useEffect(() => {
 		if (selectedEvent) {
-			const eventData = selectedEvent.appointment;
-			const { client, ...eventdata } = eventData;
-			const { id: clientId, name: clientName } = client;
-			const editFormData = {
-				...defaultFormData,
-				...eventData,
-				appointmentRate: eventData.appointmentRateCents / 100 || 0,
-				clientId,
-				clientName
-			};
+			const editFormData = processSelectedEvent(selectedEvent);
 			setFormData(editFormData);
+
 		} else if (selectedSlot) {
-			let { date, startTime, endTime } = selectedSlot;
-			if (startTime === endTime) {
-				startTime = "";
-				endTime = "";
-			}
-			const newFormData = {
-				...defaultFormData,
-				date: date || '',
-				startTime: startTime || '',
-				endTime: endTime || '',
-			};
+			const newFormData = processSelectedSlot(selectedSlot);
 			setFormData(newFormData);
+
 		} else {
 			setFormData(defaultFormData);
 		}
 	}, [show]);
 
-	const [clients, setClients] = useState([]);
+	const processSelectedSlot = (selectedSlot) => {
+		let { date, startTime, endTime } = selectedSlot;
+		if (startTime === endTime) {
+			startTime = "";
+			endTime = "";
+		}
+		const newFormData = {
+			...defaultFormData,
+			date: date || '',
+			startTime: startTime || '',
+			endTime: endTime || '',
+		};
+		return newFormData;
+	};
+
+	const processSelectedEvent = (selectedEvent) => {
+		let eventData = selectedEvent.appointment;
+		const { client, ...editEventData } = eventData;
+		const { id: clientId, name: clientName } = client;
+		const formData = {
+			...defaultFormData,
+			...editEventData,
+			appointmentRate: eventData.appointmentRateCents / 100 || 0,
+			clientId,
+			clientName
+		};
+		return formData;
+	};
 
 	const handleChange = (event) => {
 		const type = event.target.type;
@@ -91,46 +100,50 @@ function AddEditModal(props) {
 		}
 	};
 
-	useEffect(() => {
-		requests.get.user(props.user.id).clients.then((clients) => {
-			setClients(clients);
-		});
-	}, [props.user]);
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		try {
-			const response = await requests.create.appointment(formData);
-
-			// Close the modal
-			props.onClose();
-			showAlert({ title: "Success", message: "Appointment created" });
-		} catch (error) {
-			console.error("Error sending data", error);
-		}
+	const updateLocalEvents = (updatedEvent) => {
+		const updatedEvents = [...events];
+		const idx = updatedEvents.findIndex(
+			(event) => event.id === updatedEvent.id
+		);
+		updatedEvents.splice(idx, 1, updatedEvent);
+		setEvents(updatedEvents);
 	};
 
-	const handleEdit = async (event) => {
-		event.preventDefault();
-		const { id: appointmentId, client } = selectedEvent.appointment;
-		const { id: clientId } = client;
-		const editedAppointment = {
-			...formData,
-			clientId
+	const handleSubmit = (formData) => {
+		requests.create.appointment(formData)
+			.then((appointment) => {
+				const event = appointmentToEvent(appointment);
+				updateLocalEvents(event);
+				hide();
+				showAlert({ title: "Success", message: "Appointment created" });
+			})
+			.catch(() => {
+				showAlert({ title: "Nope", message: "Error sending data" });
+			});
+	};
+
+
+	const handleEdit = async (formData) => {
+
+		const { id, clientId, date, startTime, endTime, appointmentRateCents, notes } = formData;
+		const appointmentData = { clientId, date, startTime, endTime, appointmentRateCents, notes };
+		const url = `/api/appointment/${id}`;
+		const reqOptions = {
+			method: "PUT",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(appointmentData),
 		};
-		try {
-			const url = `/api/appointment/${appointmentId}`;
-			const reqOptions = {
-				method: "PUT",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify(editedAppointment),
-			};
-			fetch(url, reqOptions);
+		fetch(url, reqOptions).then((res) => res.json()).then((appointment) => {
+			console.log("appointment updated", appointment);
+			const updatedEvent = appointmentToEvent(appointment);
+			updateLocalEvents(updatedEvent);
 			showAlert({ title: "Success", message: "Updated successfully" });
-		} catch (error) {
-			console.error("Error sending data", error);
-		}
-		props.onClose();
+		})
+			.catch((error) => {
+				showAlert({ title: "Nope", message: "Error sending data" });
+				console.error("appointment not updated", error);
+			});
+		hide();
 	};
 
 	const handleDeleteAppointment = async (event) => {
@@ -138,22 +151,26 @@ function AddEditModal(props) {
 		try {
 			const appointmentId = selectedEvent.appointment.id;
 			const url = `/api/appointment/${appointmentId}`;
-			fetch(url, {
+			await fetch(url, {
 				method: "DELETE",
 				headers: { "content-type": "application/json" },
 			});
+			const updatedEvents = events.filter(
+				(event) => event.id !== appointmentId
+			);
+			setEvents(updatedEvents);
 			showAlert({ title: "Success", message: "Appointment deleted" });
 		} catch (error) {
 			console.error("appointment not deleted", error);
 		}
-		props.onClose();
+		hide();
 	};
 
 	return (
 		<>
 			<Modal
 				show={show}
-				onHide={() => onClose()}
+				onHide={hide}
 				backdrop="static"
 				keyboard={false}
 			>
@@ -231,8 +248,7 @@ function AddEditModal(props) {
 				</Modal.Body>
 				<Modal.Footer>
 					<Button
-						type="submit"
-						onClick={selectedEvent ? handleEdit : handleSubmit}
+						onClick={selectedEvent ? () => handleEdit(formData) : () => handleSubmit(formData)}
 						id="edit-appointment-button"
 					>
 						Save Appointment
