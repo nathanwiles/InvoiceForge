@@ -15,18 +15,21 @@ import { ReviewAppointmentsProvider } from "./components/ReviewAppointments/Cont
 import { UserContextProvider } from "./contextProviders/useUserContext";
 import { AlertModalProvider } from './contextProviders/useAlertModalContext.jsx';
 import { CalendarProvider } from './contextProviders/calendarContext.jsx';
+import { ClientsContextProvider } from './contextProviders/clientsContext.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-     <UserContextProvider>
-      <AlertModalProvider>
-        <ReviewAppointmentsProvider>
-          <CalendarProvider>
-            <App />
-          </CalendarProvider>
-        </ReviewAppointmentsProvider>
-      </AlertModalProvider>
-    </UserContextProvider>
+    <AlertModalProvider>
+      <UserContextProvider>
+        <ClientsContextProvider>
+          <ReviewAppointmentsProvider>
+            <CalendarProvider>
+              <App />
+            </CalendarProvider>
+          </ReviewAppointmentsProvider>
+        </ClientsContextProvider>
+      </UserContextProvider>
+    </AlertModalProvider>
   </React.StrictMode>,
 );
