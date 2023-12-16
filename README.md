@@ -1,15 +1,44 @@
-# Welcome to Finals!!!
+# InvoiceForge
 
-# Collaborators
+## Collaborators
+
   - Oluwatobi Onipede
   - Andrew Li
   - Nathan Wiles
   - Caroline Olagunju
 
-# Project Name
-  - InvoiceForge
-
 # Dependancies
+
+## Frontend
+
+- @popperjs/core
+- @react-pdf/renderer
+- cors
+- font-awesome
+- jspdf
+- jspdf-autotable
+- moment
+- nodemailer
+- react
+- react-bootstrap
+- react-big-calendar
+- react-dom
+- react-icons
+- react-modal
+
+## Backend
+
+- body-parser
+- cors
+- express
+- humps
+- knex
+- moment
+- multer
+- nodemailer
+- pg
+- yup
+
 - During development, make sure to frequently run the following command to ensure that you have the latest dependancies:
 ```sh
     npm install
@@ -66,14 +95,14 @@ Ran 3 seed files
     npm run cypress
 ```
 
-# Creating Jest Tests (backend)
+## Creating Jest Tests (backend)
 Follow the guide found here: https://jestjs.io/docs/en/getting-started
 
-# Creating Vitest Tests (frontend)
+## Creating Vitest Tests (frontend)
 
 Follow the guide found here: https://vitest.dev/guide/
 
-# Creating Cypress Tests (frontend)
+## Creating Cypress Tests (frontend)
 
 Follow the guide found here: https://docs.cypress.io/guides/overview/why-cypress
 
