@@ -39,10 +39,11 @@
 - pg
 - yup
 
-- During development, make sure to frequently run the following command to ensure that you have the latest dependancies:
-```sh
-    npm install
-```
+> During development, make sure to frequently run the following command to ensure that you have the latest dependancies:
+>```sh
+>    npm install
+>```
+
 # Trouble Shooting
 -if you are have trouble with installing the dependancies, make sure that you are using node 16.  You can check your node version by running the following command:
 ```sh
@@ -50,18 +51,18 @@
 ```
 
 # Database Initialization
-1.  Ensure that your .env has the following:
+1. Ensure that you are in the backend directory:
+```
+    cd backend
+```
+2.  Ensure that you have initialized your postgress database.
+3.  Ensure that your .env has the following:
 ```
     DB_NAME=your_db_name
     DB_USER=your_db_user
     DB_PASSWORD= your_db_password
     DB_HOST=localhost
     DB_PORT=5432
-```
-2.  Ensure that you have a postgres database created with the name specified in your .env file
-3. Ensure that you are in the backend directory:
-```
-    cd backend
 ```
 4. run the following commands in the terminal:
 ```sh
