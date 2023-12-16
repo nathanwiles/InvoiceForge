@@ -6,6 +6,7 @@ import { useAlertModal } from "../../contextProviders/useAlertModalContext";
 import { useCalendar } from "../../contextProviders/calendarContext";
 import { useClients } from "../../contextProviders/clientsContext";
 import appointmentToEvent from "./helpers/appointmentToEvent";
+import moment from "moment";
 
 
 function AddEditModal() {
@@ -18,7 +19,52 @@ function AddEditModal() {
 		setEvents,
 	} = useCalendar();
 
+	const validateForm = (formData) => {
+		let endsAfterStart = false;
+		if (formData.startTime && formData.endTime) {
+			endsAfterStart = moment(formData.startTime, "HH:mm").isBefore(moment(formData.endTime, "HH:mm"));
+		}
+		let isValid = false;
+		const invalidFields = [];
 
+		if (!formData.clientId) {
+			invalidFields.push("client");
+		}
+		if (!formData.date) {
+			invalidFields.push("date");
+		}
+		if (!formData.startTime) {
+			invalidFields.push("start time");
+		}
+		if (!formData.endTime) {
+			invalidFields.push("end time");
+		}
+		if (!endsAfterStart) {
+			invalidFields.push("end time must be after start time");
+		}
+		if (formData.clientId && formData.date && formData.startTime && formData.endTime && formData.endsAfterStart) {
+			isValid = true;
+		}
+
+		//package invalid field to html list
+		if (invalidFields.length > 0) {
+			// render invalid fields as an unordered html list
+			const renderInvalidFields = (invalidFields) => {
+				return (
+					<>
+						<h2>Invalid Fields </h2>
+						<ul>
+							{invalidFields.map((field) => <li>{field}</li>)}
+						</ul>
+					</>
+				);
+			};
+
+				const message = renderInvalidFields(invalidFields);
+
+				return { isValid, message };
+		};
+	};
 	const defaultFormData = {
 		clientId: "",
 		clientName: "",
@@ -110,6 +156,11 @@ function AddEditModal() {
 	};
 
 	const handleSubmit = (formData) => {
+		const { isValid, message } = validateForm(formData);
+		if (!isValid) {
+			showAlert({ title: "Nope", message });
+			return;
+		}
 		requests.create.appointment(formData)
 			.then((appointment) => {
 				const event = appointmentToEvent(appointment);
@@ -124,15 +175,23 @@ function AddEditModal() {
 
 
 	const handleEdit = async (formData) => {
+		const { isValid, message } = validateForm(formData);
+		if (!isValid) {
+			showAlert({ title: "Nope", message });
+			return;
+		}
 
 		const { id, clientId, date, startTime, endTime, appointmentRateCents, notes } = formData;
 		const appointmentData = { clientId, date, startTime, endTime, appointmentRateCents, notes };
+
+		// configure PUT request
 		const url = `/api/appointment/${id}`;
 		const reqOptions = {
 			method: "PUT",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(appointmentData),
 		};
+
 		fetch(url, reqOptions).then((res) => res.json()).then((appointment) => {
 			console.log("appointment updated", appointment);
 			const updatedEvent = appointmentToEvent(appointment);
@@ -264,6 +323,6 @@ function AddEditModal() {
 			</Modal>
 		</>
 	);
-}
+};
 
 export default AddEditModal;
