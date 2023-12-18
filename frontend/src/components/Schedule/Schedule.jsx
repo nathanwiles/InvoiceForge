@@ -1,30 +1,13 @@
 import { React, useEffect, useState } from "react";
 import AddEditModal from "./AddEditModal";
-import Day from "./Day";
-import { useCalendar } from "../../contextProviders/calendarContext";
+import Calendar from "./Calendar";
 
-const Schedule = (props) => {
-	const {
-		setSelectedEvent,
-		show
-	} = useCalendar();
-
-	
-	useEffect(() => {
-		if (show === false) {
-			setSelectedEvent(null);
-		}
-	}, [show]);
-
+const Schedule = () => {
 	return (
-		<div className="fullPage">
-			<AddEditModal
-				user={props.user}
-			/>
-			<Day
-				user={props.user}
-			/>
-		</div>
+		<section className="fullPage">
+			<AddEditModal/>
+			<Calendar/>
+		</section>
 	);
 };
 
