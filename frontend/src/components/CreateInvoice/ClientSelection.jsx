@@ -21,18 +21,28 @@ const ClientSelection = ({ selectedClient, handleClientSelect, clients }) => {
           Select a client
         </option>
 
-
-        {clients.map((client) => (
+        {Array.isArray(clients) && clients.map((client) => (
           <option key={client.id} value={client.id}>
             {client.name}
           </option>
         ))}
+        {clients === null && (
+          <option disabled value="">
+            Loading...
+          </option>
+        )}
+        {!!clients.error && (
+          <option disabled value="">
+            No clients found
+          </option>
+        )}
+
       </select>
       {selectedClient === null && (
         <div>
           <div className="select-client-msg">
-          <p>Ready to generate an invoice?</p>
-          <p>Choose a client to get started by clicking the "Select a client" drop-down menu above!</p>
+            <p>Ready to generate an invoice?</p>
+            <p>Choose a client to get started by clicking the "Select a client" drop-down menu above!</p>
           </div>
 
         </div>
