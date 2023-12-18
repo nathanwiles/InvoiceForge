@@ -87,7 +87,7 @@ function App() {
       <section className="page-content">
         {displayPage === 0 && <LandingPage />}
 
-        {displayPage === 1 && <Schedule user={user} />}
+        {displayPage === 1 && <Schedule />}
         {displayPage === 2 && <ClientList user={user} />}
         {displayPage === 4 && (
           <AppointmentContainer user={user} />
