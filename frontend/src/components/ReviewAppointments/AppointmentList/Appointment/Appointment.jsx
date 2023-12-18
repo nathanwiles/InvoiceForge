@@ -55,13 +55,16 @@ const Appointment = ({ appointment }) => {
         throw new Error("Error updating appointment");
       }
       // set the appointment to reviewed
-      dispatch({ type: actions.moveToReviewed, payload: {...appointment, confirmedHours: hours, reviewed:true} });
+      dispatch({ type: actions.moveToReviewed, payload: { ...appointment, confirmedHours: hours, reviewed: true } });
 
     }).catch((e) => {
       // Set the error message and open the alert
       console.log(e);
       setloading(false);
-      dispatch({ type: actions.setErrMessage, payload: "Sorry, there was an issue updating your appointment" });
+      dispatch({
+        type: actions.setErrMessage,
+        payload: "Sorry, there was an issue updating your appointment"
+      });
       dispatch({ type: actions.openAlert });
     });
   };
@@ -73,9 +76,16 @@ const Appointment = ({ appointment }) => {
       <td>{notes}</td>
       <td className='col-auto'>{
         confirmedHours ||
-        <input type="number" className='number-input' name="confirmedHours" min="1" step="1" value={hours} onChange={(e) => {
-          setHours(e.target.value);
-        }} />
+        <input type="number"
+          className='number-input'
+          name="confirmedHours"
+          min="1"
+          step="1"
+          value={hours}
+          onChange={(e) => {
+            setHours(e.target.value);
+          }}
+        />
       }</td>
       <td>
         <button
