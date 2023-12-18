@@ -12,7 +12,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
-const Day = ({user}) => {
+export default () => {
   const { showAlert } = useAlertModal();
   const {
     events,
@@ -20,6 +20,7 @@ const Day = ({user}) => {
 		showAddEditModal,
   } = useCalendar();
 
+	// handles updating the appointment in the database
 	const handleAppointmentUpdate = (newData, appointment) => {
 		const updatedAppointment = { ...appointment, ...newData };
 		return requests.update.appointment(appointment.id, updatedAppointment).then(() => updatedAppointment)
@@ -32,14 +33,21 @@ const Day = ({user}) => {
 			});
 	};
 
+	// handles updating the event when it is dragged or resized
 	const adjustEvent = ({event, start, end}) => {
 		const idx = events.indexOf(event);
+		// create a new event with the updated start and end times
 		let updatedEvent = { ...event, start, end };
+
+		// define the date, startTime, and endTime to be sent to the server
 		const date = moment(start).format('YYYY-MM-DD');
 		const startTime = moment(start).format('HH:mm:SS');
 		const endTime = moment(end).format('HH:mm:SS');
+
+		// update the appointment in the database
 		return handleAppointmentUpdate({ date, startTime, endTime }, updatedEvent.appointment)
 			.then((appointment) => {
+				// update the event in the events array
 				updatedEvent = { ...updatedEvent, appointment };
 				const updatedEvents = [...events];
 				updatedEvents.splice(idx, 1, updatedEvent);
@@ -58,16 +66,14 @@ const Day = ({user}) => {
 	};
 
 	// opens the modal with the selected event
-	const handleSelectedEvent = (event) => {
+	const handleSelectEvent = (event) => {
 		showAddEditModal({event});
 	};
 
-
-
 	const minTime = new Date();
-	minTime.setHours(5, 30, 0);
+	minTime.setHours(5, 0, 0);
 	const maxTime = new Date();
-	maxTime.setHours(20, 30, 0);
+	maxTime.setHours(21, 0, 0);
 
 	return (
 		<div className="myCustomHeight" style={{ height: "80vh" }}>
@@ -80,7 +86,7 @@ const Day = ({user}) => {
 				views={["month", "week", "day"]}
 				min={minTime}
 				max={maxTime}
-				onSelectEvent={handleSelectedEvent}
+				onSelectEvent={handleSelectEvent}
 				selectable={true}
 				onSelectSlot={handleSelectSlot}
 				showMultiDayTimes={true}
@@ -93,5 +99,3 @@ const Day = ({user}) => {
 		</div>
 	);
 };
-
-export default Day;
