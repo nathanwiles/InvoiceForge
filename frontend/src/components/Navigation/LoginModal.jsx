@@ -1,32 +1,29 @@
-import { useState, useEffect } from 'react';
-import requests from '../../api/requests';
+import { useState } from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app as firebase } from '../../api/firebase'; // import firebase
 import '../../styles/login-modal.scss';
-
 
 const LoginModal = (props) => {
   const [email, setEmail] = useState('');
-  const [loginError, setLoginError] = useState(false);
+  const [password, setPassword] = useState(''); // add password state
+  const [loginError, setLoginError] = useState(null);
   const { setUser, handleLinkClick } = props;
 
   const fetchUser = async () => {
     try {
-      const user = await requests.get.idByEmail(email);
+      if (!email || !password) {
+        setLoginError('Email and password cannot be empty');
+        return;
+      }
 
-      if (!user.error) {
-        setUser(user);
-        setLoginError(null);
-        // check that a user was retrieved and that they have clients
-        const clients = await requests.get.user(user.id).clients;
-        if (clients.length === 0) {
-          handleLinkClick(2);
-        }
-      }
-      else {
-        // if no user was retrieved, set error to true
-        setLoginError(true);
-      }
+      const auth = getAuth(firebase);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      setUser(user);
+      setLoginError(null);
     } catch (error) {
       console.log(error);
+      setLoginError('Login failed');
     }
   };
 
@@ -57,12 +54,18 @@ const LoginModal = (props) => {
               </div>
               <div className="login-form-group">
                 <label htmlFor="password">Password:</label>
-                <input type="password" id="password" />
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} // add password onChange handler
+                  required
+                />
               </div>
               <button className='login-button' type="submit">Login</button>
             </div>
           </form>
-          {loginError && <div className="error-message">{"Login Failed"}</div>}
+          {loginError && <div className="error-message">{loginError}</div>}
         </div>
       </div>
     </div>
