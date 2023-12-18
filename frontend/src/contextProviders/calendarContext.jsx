@@ -12,14 +12,18 @@ export const useCalendar = () => {
 
 export const CalendarProvider = ({ children }) => {
 
-  // State management
+  // Contexts
   const { showAlert } = useAlertModal();
   const { user } = useUserContext();
+
+  // State management
   const userId = user ? user.id : null;
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [show, setShow] = useState(false);
+
+  // handle showing the add/edit modal
   const showAddEditModal = ({event, slot}) => {
     // if event is passed in, set selectedEvent before showing modal
     if (event) setSelectedEvent(event);
@@ -32,13 +36,12 @@ export const CalendarProvider = ({ children }) => {
     setSelectedSlot(null);
   };
 
-  // handle fetching events
+  // handle fetching events on login
   useEffect(() => {
     if (!userId) {
       setEvents([]); // clear events if no user
       return;
     }
-
     // fetch events
     requests.get.user(userId).appointments.then((appointments) => {
       const events = appointments.map(appointment => appointmentToEvent(appointment));
